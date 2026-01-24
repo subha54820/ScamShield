@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Textarea } from '@/app/components/ui/textarea';
 import { AlertCircle } from 'lucide-react';
 
 const exampleMessages = [
@@ -22,15 +21,33 @@ const exampleMessages = [
 export function MessageAnalyzer() {
   const [message, setMessage] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (message.trim()) {
       setIsAnalyzing(true);
-      // Simulate analysis
-      setTimeout(() => {
-        navigate('/message-result', { state: { message } });
-      }, 1500);
+      setError('');
+      try {
+        const response = await fetch('http://localhost:8002/api/analyze/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ message: message.trim() }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to analyze message');
+        }
+
+        const result = await response.json();
+        navigate('/message-result', { state: { ...result, input_message: message } });
+      } catch (err) {
+        console.error('Analysis error:', err);
+        setError('Failed to analyze message. Please try again.');
+        setIsAnalyzing(false);
+      }
     }
   };
 
@@ -58,11 +75,11 @@ export function MessageAnalyzer() {
 
           {/* Main Input Card */}
           <div className="p-8 rounded-2xl bg-[#1a1f3a]/50 border border-[#00d9ff]/20 shadow-[0_0_30px_rgba(0,217,255,0.1)] mb-8">
-            <Textarea
+            <textarea
               placeholder="Paste your message here..."
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="min-h-[300px] bg-[#0a0e27] border-[#00d9ff]/30 text-white placeholder:text-gray-500 focus:border-[#00d9ff] focus:shadow-[0_0_15px_rgba(0,217,255,0.3)] transition-all resize-none"
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
+              className="w-full min-h-[300px] max-h-[600px] bg-[#0a0e27] border border-[#00d9ff]/30 text-white placeholder:text-gray-500 focus:border-[#00d9ff] focus:shadow-[0_0_15px_rgba(0,217,255,0.3)] transition-all rounded-lg px-4 py-3 overflow-y-auto font-medium"
             />
             <div className="flex items-center justify-between mt-4">
               <div className="text-sm text-gray-500">
@@ -83,6 +100,11 @@ export function MessageAnalyzer() {
                 )}
               </button>
             </div>
+            {error && (
+              <div className="mt-4 p-4 bg-[#ff3b3b]/20 border border-[#ff3b3b] rounded-lg text-[#ff3b3b] text-sm">
+                {error}
+              </div>
+            )}
           </div>
 
           {/* Example Messages */}

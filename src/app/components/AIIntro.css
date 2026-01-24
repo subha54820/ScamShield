@@ -1,0 +1,810 @@
+/* ============================================
+   AI-POWERED INTRO - SCAMSHIELD
+   Advanced Holographic Neural Network Theme
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+.ai-intro {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #050B14;
+  overflow: hidden;
+  z-index: 9999;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ============================================
+   CANVAS & BACKGROUND
+   ============================================ */
+
+.neural-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+.cyber-fog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    rgba(0, 229, 255, 0.03) 50%,
+    rgba(5, 11, 20, 0.2) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+  animation: fog-pulse 8s ease-in-out infinite;
+}
+
+@keyframes fog-pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   SCENE BASE
+   ============================================ */
+
+.scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scene.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ============================================
+   SCENE 1: AI BRAIN INTRODUCTION
+   ============================================ */
+
+.scene-ai-brain {
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 229, 255, 0.05) 0%,
+    rgba(5, 11, 20, 0) 70%
+  );
+}
+
+.brain-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+}
+
+.holographic-brain {
+  width: 300px;
+  height: 300px;
+  perspective: 1200px;
+  position: relative;
+  filter: drop-shadow(0 0 60px #00E5FF) drop-shadow(0 0 30px #00FF7F);
+  transform-style: preserve-3d;
+}
+
+.brain-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 20px #00E5FF);
+}
+
+.brain-pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border: 2px solid #00E5FF;
+  border-radius: 50%;
+  box-shadow: 0 0 30px #00E5FF, inset 0 0 30px rgba(0, 229, 255, 0.3);
+}
+
+.ai-awakening-text {
+  margin-top: 60px;
+  text-align: center;
+  z-index: 20;
+}
+
+.awakening-label {
+  font-size: 16px;
+  color: #00E5FF;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin: 0;
+  font-weight: 600;
+  text-shadow: 0 0 15px #00E5FF;
+}
+
+.awakening-sublabel {
+  font-size: 12px;
+  color: #00FF7F;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin: 10px 0 0;
+  animation: blink-text 1s ease-in-out infinite;
+}
+
+@keyframes blink-text {
+  0%, 49%, 100% {
+    opacity: 1;
+  }
+  50%, 99% {
+    opacity: 0.4;
+  }
+}
+
+/* ============================================
+   SCENE 2: NEURAL NETWORK
+   ============================================ */
+
+.scene-network {
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 255, 127, 0.08) 0%,
+    transparent 60%
+  );
+}
+
+.network-info {
+  text-align: center;
+  z-index: 15;
+  animation: pulse-in-out 2s ease-in-out;
+}
+
+.network-title {
+  font-size: 48px;
+  color: #00E5FF;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  margin: 0;
+  font-weight: 700;
+  text-shadow: 0 0 30px #00E5FF, -2px 0 #00FF7F, 2px 0 #FF3B3B;
+  animation: glitch-animate-ai 2s ease-in-out infinite;
+}
+
+.network-subtitle {
+  font-size: 14px;
+  color: #00FF7F;
+  letter-spacing: 2px;
+  margin-top: 20px;
+  font-weight: 400;
+  text-shadow: 0 0 15px #00FF7F;
+}
+
+@keyframes pulse-in-out {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes glitch-animate-ai {
+  0%, 100% {
+    text-shadow: 0 0 30px #00E5FF, -2px 0 #00FF7F, 2px 0 #FF3B3B;
+  }
+  50% {
+    text-shadow: 0 0 40px #00E5FF, 2px 0 #00FF7F, -2px 0 #FF3B3B;
+  }
+}
+
+/* ============================================
+   SCENE 3: CYBER RETICLE & HUD
+   ============================================ */
+
+.scene-reticle {
+  position: relative;
+}
+
+.reticle-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  z-index: 15;
+}
+
+.reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid #00E5FF;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #00E5FF, inset 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+.reticle-1 {
+  width: 150px;
+  height: 150px;
+  opacity: 0.8;
+}
+
+.reticle-2 {
+  width: 250px;
+  height: 250px;
+  opacity: 0.5;
+  border-color: #00FF7F;
+  box-shadow: 0 0 15px #00FF7F;
+}
+
+.reticle-3 {
+  width: 350px;
+  height: 350px;
+  opacity: 0.3;
+  border-color: rgba(0, 229, 255, 0.5);
+}
+
+.crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  z-index: 16;
+}
+
+.crosshair-h,
+.crosshair-v {
+  position: absolute;
+  background: linear-gradient(90deg, transparent, #00E5FF, transparent);
+}
+
+.crosshair-h {
+  width: 100px;
+  height: 1px;
+  top: 50%;
+  left: 0;
+  box-shadow: 0 0 10px #00E5FF;
+}
+
+.crosshair-v {
+  width: 1px;
+  height: 100px;
+  top: 0;
+  left: 50%;
+  background: linear-gradient(180deg, transparent, #00E5FF, transparent);
+  box-shadow: 0 0 10px #00E5FF;
+}
+
+.crosshair-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #00FF7F;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #00FF7F, inset 0 0 8px rgba(0, 255, 127, 0.6);
+}
+
+.hud-element {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  z-index: 17;
+  padding: 15px 20px;
+  border: 1px solid #00E5FF;
+  background: rgba(0, 229, 255, 0.05);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.2), inset 0 0 15px rgba(0, 229, 255, 0.05);
+}
+
+.hud-label {
+  color: #00E5FF;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+.hud-value {
+  color: #00FF7F;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 5px;
+  text-shadow: 0 0 10px #00FF7F;
+}
+
+.hud-value.online {
+  color: #00FF7F;
+  animation: blink-online 1s ease-in-out infinite;
+}
+
+@keyframes blink-online {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0.6;
+  }
+}
+
+.hud-top-left {
+  top: 60px;
+  left: 40px;
+}
+
+.hud-top-right {
+  top: 60px;
+  right: 40px;
+}
+
+.scan-beam {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    #00E5FF 45deg,
+    #00FF7F 90deg,
+    transparent 180deg
+  );
+  border-radius: 50%;
+  opacity: 0.2;
+  filter: blur(20px);
+}
+
+/* ============================================
+   SCENE 4: LOGO & BRAND REVEAL
+   ============================================ */
+
+.scene-logo {
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 255, 127, 0.1) 0%,
+    transparent 50%
+  );
+  flex-direction: column;
+}
+
+.logo-emergence {
+  width: 250px;
+  height: 300px;
+  perspective: 1000px;
+  margin-bottom: 40px;
+  filter: drop-shadow(0 0 40px #00E5FF) drop-shadow(0 0 20px #00FF7F);
+}
+
+.shield-logo-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 15px #00E5FF);
+}
+
+.brand-reveal {
+  text-align: center;
+  z-index: 16;
+  animation: fade-in-up 1s ease-out 0.5s both;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.brand-title {
+  font-size: 64px;
+  font-weight: 700;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  margin: 0;
+  position: relative;
+  color: #00FF7F;
+  text-shadow: 0 0 30px #00FF7F, -2px 0 #00E5FF, 2px 0 #FF3B3B;
+}
+
+.glitch-text {
+  animation: glitch-title 2.5s ease-in-out infinite;
+}
+
+@keyframes glitch-title {
+  0%, 100% {
+    text-shadow: 0 0 30px #00FF7F, -2px 0 #00E5FF, 2px 0 #FF3B3B;
+    transform: translate(0);
+  }
+  25% {
+    text-shadow: 0 0 20px #00E5FF, 2px 0 #FF3B3B, -2px 0 #00FF7F;
+    transform: translate(-2px, 2px);
+  }
+  50% {
+    text-shadow: 0 0 40px #00FF7F, -2px 0 #FF3B3B, 2px 0 #00E5FF;
+    transform: translate(2px, -2px);
+  }
+  75% {
+    text-shadow: 0 0 25px #00E5FF, 2px 0 #00FF7F, -2px 0 #FF3B3B;
+    transform: translate(-1px, 1px);
+  }
+}
+
+.brand-subtitle {
+  font-size: 14px;
+  color: #00E5FF;
+  letter-spacing: 2px;
+  margin-top: 15px;
+  font-weight: 400;
+  text-shadow: 0 0 15px #00E5FF;
+}
+
+.energy-pulse {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: pulse-expand 2s ease-out infinite;
+}
+
+.pulse-1 {
+  width: 200px;
+  height: 200px;
+  background: #00E5FF;
+  opacity: 0.3;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 0s;
+}
+
+.pulse-2 {
+  width: 300px;
+  height: 300px;
+  background: #00FF7F;
+  opacity: 0.2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 0.5s;
+}
+
+@keyframes pulse-expand {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   SCENE 5: THREAT DETECTION
+   ============================================ */
+
+.scene-threat {
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 59, 59, 0.05) 0%,
+    transparent 60%
+  );
+}
+
+.threat-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+}
+
+.threat-node {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 229, 255, 0.8);
+  box-shadow: 0 0 20px currentColor;
+  border: 2px solid currentColor;
+}
+
+.threat-warning {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(255, 59, 59, 0.8);
+  border-radius: 50%;
+  animation: danger-pulse 1s ease-in-out infinite;
+}
+
+@keyframes danger-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+.risk-meter {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  text-align: center;
+}
+
+.meter-label {
+  color: #FF3B3B;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.meter-bar {
+  height: 6px;
+  background: linear-gradient(90deg, #00E5FF, #FF3B3B);
+  border: 1px solid #FF3B3B;
+  border-radius: 3px;
+  box-shadow: 0 0 15px #FF3B3B, inset 0 0 8px rgba(255, 59, 59, 0.3);
+}
+
+.security-lock {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  bottom: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.lock-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 15px #00FF7F);
+}
+
+.threat-text {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #00FF7F;
+  font-size: 14px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px #00FF7F;
+  font-weight: 600;
+}
+
+/* ============================================
+   HUD OVERLAY & EFFECTS
+   ============================================ */
+
+.hud-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 229, 255, 0.02) 0%,
+    transparent 20%,
+    transparent 80%,
+    rgba(0, 255, 127, 0.02) 100%
+  );
+  pointer-events: none;
+  z-index: 50;
+}
+
+.scan-lines-ai {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 229, 255, 0.02) 0px,
+    rgba(0, 229, 255, 0.02) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 99;
+  animation: scan-move-ai 0.2s linear infinite;
+}
+
+@keyframes scan-move-ai {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+.noise-texture-ai {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='2' /%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noiseFilter)' opacity='0.03' /%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 98;
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+}
+
+.digital-grid-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 229, 255, 0.05) 50%,
+    rgba(0, 229, 255, 0.1) 100%
+  );
+  background-image:
+    linear-gradient(
+      0deg,
+      transparent 24%,
+      rgba(0, 229, 255, 0.05) 25%,
+      rgba(0, 229, 255, 0.05) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(0, 229, 255, 0.05) 75%,
+      rgba(0, 229, 255, 0.05) 76%,
+      transparent 77%,
+      transparent
+    ),
+    linear-gradient(
+      90deg,
+      transparent 24%,
+      rgba(0, 229, 255, 0.05) 25%,
+      rgba(0, 229, 255, 0.05) 26%,
+      transparent 27%,
+      transparent 74%,
+      rgba(0, 229, 255, 0.05) 75%,
+      rgba(0, 229, 255, 0.05) 76%,
+      transparent 77%,
+      transparent
+    );
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 5;
+  filter: perspective(600px) rotateX(75deg);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .holographic-brain {
+    width: 220px;
+    height: 220px;
+  }
+
+  .network-title {
+    font-size: 36px;
+  }
+
+  .reticle-container {
+    width: 250px;
+    height: 250px;
+  }
+
+  .brand-title {
+    font-size: 48px;
+  }
+
+  .hud-element {
+    font-size: 10px;
+    padding: 10px 15px;
+  }
+
+  .hud-top-left,
+  .hud-top-right {
+    top: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .holographic-brain {
+    width: 160px;
+    height: 160px;
+  }
+
+  .network-title {
+    font-size: 28px;
+    letter-spacing: 3px;
+  }
+
+  .brand-title {
+    font-size: 36px;
+    letter-spacing: 4px;
+  }
+
+  .reticle-container {
+    width: 200px;
+    height: 200px;
+  }
+
+  .reticle-1 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .reticle-2 {
+    width: 160px;
+    height: 160px;
+  }
+
+  .reticle-3 {
+    width: 220px;
+    height: 220px;
+  }
+
+  .hud-element {
+    font-size: 9px;
+    padding: 8px 12px;
+  }
+
+  .hud-top-left,
+  .hud-top-right {
+    top: 30px;
+    left: 20px !important;
+    right: 20px !important;
+  }
+}
