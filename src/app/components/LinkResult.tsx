@@ -1,16 +1,20 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Shield, CheckCircle2, XCircle, AlertTriangle, Globe, Lock, Server, ExternalLink } from 'lucide-react';
-import { Progress } from '@/app/components/ui/progress';
 import { useState, useEffect } from 'react';
 
 export function LinkResult() {
   const location = useLocation();
   const navigate = useNavigate();
-  const url = location.state?.url || '';
   
-  const [trustScore, setTrustScore] = useState(0);
-  const targetScore = 28; // Low trust score (dangerous) for demo
+  const url = location.state?.url || '';
+  const riskLevel = location.state?.riskLevel || 'SAFE';
+  const scamScore = location.state?.scamScore || 0;
+  const detectedKeywords = location.state?.detectedKeywords || [];
+  const detectedThreats = location.state?.detectedThreats || [];
+  const safetyAdvice = location.state?.safetyAdvice || [];
+  
+  const [animatedScore, setAnimatedScore] = useState(0);
 
   useEffect(() => {
     const duration = 1500;
@@ -21,57 +25,32 @@ export function LinkResult() {
     const timer = setInterval(() => {
       step++;
       const progress = step / steps;
-      setTrustScore(Math.floor(targetScore * progress));
+      setAnimatedScore(Math.floor(scamScore * progress));
       if (step >= steps) clearInterval(timer);
     }, interval);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [scamScore]);
 
   if (!url) {
     navigate('/link-checker');
     return null;
   }
 
-  const threats = [
-    { label: 'Phishing attempt', detected: true },
-    { label: 'Malware detected', detected: false },
-    { label: 'Blacklisted domain', detected: true },
-    { label: 'Suspicious redirects', detected: true },
-  ];
-
-  const domainInfo = {
-    age: '3 days',
-    ssl: false,
-    knownThreat: true,
+  const getRiskColor = (level: string) => {
+    switch (level) {
+      case 'SAFE':
+        return { color: '#00ff41', bgColor: 'bg-[#00ff41]/20', icon: '✅' };
+      case 'SUSPICIOUS':
+        return { color: '#ffd93d', bgColor: 'bg-[#ffd93d]/20', icon: '⚠️' };
+      case 'SCAM':
+        return { color: '#ff3b3b', bgColor: 'bg-[#ff3b3b]/20', icon: '🚨' };
+      default:
+        return { color: '#00d9ff', bgColor: 'bg-[#00d9ff]/20', icon: '❓' };
+    }
   };
 
-  const getStatus = (score: number) => {
-    if (score >= 70) return {
-      label: "It's safe to proceed",
-      color: '#00ff41',
-      icon: CheckCircle2,
-      bg: 'bg-[#00ff41]/10',
-      border: 'border-[#00ff41]/50',
-    };
-    if (score >= 40) return {
-      label: 'Proceed with caution',
-      color: '#ffd93d',
-      icon: AlertTriangle,
-      bg: 'bg-[#ffd93d]/10',
-      border: 'border-[#ffd93d]/50',
-    };
-    return {
-      label: 'DO NOT VISIT - High Risk',
-      color: '#ff3b3b',
-      icon: XCircle,
-      bg: 'bg-[#ff3b3b]/10',
-      border: 'border-[#ff3b3b]/50',
-    };
-  };
-
-  const status = getStatus(trustScore);
-  const StatusIcon = status.icon;
+  const risk = getRiskColor(riskLevel);
 
   return (
     <div className="min-h-screen pt-24 px-6 pb-12">
@@ -87,159 +66,112 @@ export function LinkResult() {
               <Globe className="w-8 h-8 text-[#00d9ff]" />
               <div className="flex-1 min-w-0">
                 <div className="text-sm text-gray-400 mb-1">Scanned URL</div>
-                <div className="text-white font-mono text-lg truncate">{url}</div>
+                <div className="text-white font-mono text-sm truncate">{url}</div>
               </div>
-              <button className="px-4 py-2 bg-[#00d9ff]/10 text-[#00d9ff] rounded-lg hover:bg-[#00d9ff]/20 transition-all text-sm">
-                Copy
-              </button>
             </div>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Left Column */}
+            {/* Left Column - Risk Score */}
             <div className="space-y-8">
-              {/* Trust Score */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="p-8 rounded-xl bg-[#1a1f3a]/50 border border-[#00d9ff]/20 shadow-[0_0_30px_rgba(0,217,255,0.1)]"
               >
-                <h2 className="text-2xl font-bold text-white mb-6">Domain Trust Score</h2>
+                <h2 className="text-2xl font-bold text-white mb-6">Link Risk Score</h2>
                 <div className="mb-6">
-                  <div className="flex items-end gap-2 mb-2">
-                    <div className="text-5xl font-bold text-white">{trustScore}</div>
+                  <div className="flex items-end gap-2 mb-4">
+                    <div className="text-5xl font-bold text-white">{animatedScore}</div>
                     <div className="text-gray-400 mb-2">/100</div>
                   </div>
-                  <Progress 
-                    value={trustScore} 
-                    className="h-3"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                    }}
-                  />
+                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${risk.bgColor} border-2`} style={{ borderColor: risk.color }}>
+                    <span className="text-2xl">{risk.icon}</span>
+                    <span className="font-bold text-white">{riskLevel}</span>
+                  </div>
                 </div>
               </motion.div>
 
-              {/* Domain Info */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="p-8 rounded-xl bg-[#1a1f3a]/50 border border-[#00d9ff]/20"
-              >
-                <h2 className="text-2xl font-bold text-white mb-6">Risk Analysis</h2>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between py-3 border-b border-white/10">
-                    <div className="flex items-center gap-3">
-                      <Server className="w-5 h-5 text-[#00d9ff]" />
-                      <span className="text-gray-300">Age of domain</span>
-                    </div>
-                    <span className="text-white font-semibold">{domainInfo.age}</span>
+              {/* Detected Keywords */}
+              {detectedKeywords.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="p-6 rounded-xl bg-[#1a1f3a]/50 border border-[#ff3b3b]/20"
+                >
+                  <h3 className="text-lg font-bold text-white mb-4">🔍 Detected Indicators</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {detectedKeywords.map((keyword: string, index: number) => (
+                      <div key={index} className="px-3 py-1 bg-[#ff3b3b]/20 text-[#ff3b3b] rounded-full text-sm font-semibold">
+                        {keyword}
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-white/10">
-                    <div className="flex items-center gap-3">
-                      <Lock className="w-5 h-5 text-[#00d9ff]" />
-                      <span className="text-gray-300">SSL certificate</span>
-                    </div>
-                    {domainInfo.ssl ? (
-                      <span className="flex items-center gap-1.5 text-[#00ff41]">
-                        <CheckCircle2 className="w-4 h-4" />
-                        Valid
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1.5 text-[#ff3b3b]">
-                        <XCircle className="w-4 h-4" />
-                        Missing
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between py-3">
-                    <div className="flex items-center gap-3">
-                      <Shield className="w-5 h-5 text-[#00d9ff]" />
-                      <span className="text-gray-300">Threat database</span>
-                    </div>
-                    {domainInfo.knownThreat ? (
-                      <span className="flex items-center gap-1.5 text-[#ff3b3b]">
-                        <XCircle className="w-4 h-4" />
-                        Flagged
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1.5 text-[#00ff41]">
-                        <CheckCircle2 className="w-4 h-4" />
-                        Clean
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              )}
             </div>
 
             {/* Right Column */}
             <div className="space-y-8">
-              {/* Threat Indicators */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="p-8 rounded-xl bg-[#1a1f3a]/50 border border-[#00d9ff]/20"
-              >
-                <h2 className="text-2xl font-bold text-white mb-6">Threat Indicators</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  {threats.map((threat, index) => (
-                    <div
-                      key={index}
-                      className={`p-5 rounded-lg border ${
-                        threat.detected
-                          ? 'bg-[#ff3b3b]/10 border-[#ff3b3b]/30'
-                          : 'bg-[#00ff41]/10 border-[#00ff41]/30'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center text-center gap-2">
-                        {threat.detected ? (
-                          <XCircle className="w-8 h-8 text-[#ff3b3b]" />
-                        ) : (
-                          <CheckCircle2 className="w-8 h-8 text-[#00ff41]" />
-                        )}
-                        <span className={`text-sm font-semibold ${
-                          threat.detected ? 'text-[#ff3b3b]' : 'text-[#00ff41]'
-                        }`}>
-                          {threat.label}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {threat.detected ? 'Yes' : 'No'}
-                        </span>
+              {/* Threats Detected */}
+              {detectedThreats.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="p-6 rounded-xl bg-[#1a1f3a]/50 border border-[#ff3b3b]/20"
+                >
+                  <h2 className="text-2xl font-bold text-white mb-6">⚠️ Why This Link is Risky</h2>
+                  <div className="space-y-3">
+                    {detectedThreats.map((threat: string, index: number) => (
+                      <div key={index} className="flex items-start gap-3 p-4 rounded-lg bg-[#ff3b3b]/10 border border-[#ff3b3b]/20">
+                        <span className="text-xl flex-shrink-0 mt-0.5">🚨</span>
+                        <p className="text-gray-200">{threat}</p>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
 
-              {/* Recommendation */}
+              {/* Safety Advice */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
-                className={`p-8 rounded-xl border-2 ${status.bg} ${status.border}`}
+                className="p-6 rounded-xl bg-gradient-to-r from-[#00d9ff]/10 to-[#00a3cc]/10 border border-[#00d9ff]/30"
               >
-                <div className="flex items-center gap-4 mb-4">
-                  <div className={`p-4 rounded-full ${status.bg}`}>
-                    <StatusIcon className="w-8 h-8" style={{ color: status.color }} />
-                  </div>
-                  <h2 className="text-2xl font-bold" style={{ color: status.color }}>
-                    {status.label}
-                  </h2>
-                </div>
-                {trustScore < 40 && (
-                  <div className="space-y-2 text-gray-300">
-                    <p>This link has been identified as highly dangerous:</p>
-                    <ul className="list-disc list-inside space-y-1 text-sm">
-                      <li>Do not enter any personal information</li>
-                      <li>Do not download any files</li>
-                      <li>Close this page immediately</li>
-                      <li>Report this link to authorities</li>
-                    </ul>
-                  </div>
+                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <span>🛡️</span> Safety Advice
+                </h3>
+                <ul className="space-y-2">
+                  {safetyAdvice.map((advice: string, index: number) => (
+                    <li key={index} className="flex items-start gap-3 text-gray-200">
+                      <span className="text-[#00d9ff] font-bold">•</span>
+                      <span>{advice}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+
+              {/* Risk Level Alert */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className={`p-6 rounded-xl border-2 ${risk.bgColor}`}
+                style={{ borderColor: risk.color }}
+              >
+                <h3 className="text-lg font-bold text-white mb-2">Overall Assessment</h3>
+                {riskLevel === 'SCAM' && (
+                  <p className="text-red-300 font-semibold">🛑 DO NOT click this link. It appears to be a scam.</p>
+                )}
+                {riskLevel === 'SUSPICIOUS' && (
+                  <p className="text-yellow-300 font-semibold">⚠️ Be cautious. This link has suspicious characteristics.</p>
+                )}
+                {riskLevel === 'SAFE' && (
+                  <p className="text-green-300 font-semibold">✅ This link appears safe, but always verify before entering sensitive information.</p>
                 )}
               </motion.div>
 
@@ -255,7 +187,7 @@ export function LinkResult() {
                   onClick={() => navigate('/report')}
                   className="w-full px-6 py-3 bg-[#ff3b3b]/20 text-[#ff3b3b] border border-[#ff3b3b]/30 rounded-lg hover:bg-[#ff3b3b]/30 transition-all duration-300 hover:-translate-y-0.5 font-semibold"
                 >
-                  Report False Positive
+                  Report Malicious Link
                 </button>
               </div>
             </div>

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Link as LinkIcon, Search, Clock, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
-import { Input } from '@/app/components/ui/input';
+import { Input } from './ui/input';
+import { analyzeLink } from '../utils/linkAnalyzer';
 
 export function LinkChecker() {
   const [url, setUrl] = useState('');
@@ -20,8 +21,10 @@ export function LinkChecker() {
   const handleScan = () => {
     if (url.trim()) {
       setIsScanning(true);
+      // Analyze link locally
+      const result = analyzeLink(url);
       setTimeout(() => {
-        navigate('/link-result', { state: { url } });
+        navigate('/link-result', { state: { url, ...result } });
       }, 1500);
     }
   };
@@ -75,7 +78,12 @@ export function LinkChecker() {
                     placeholder="https://example.com"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleScan()}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleScan();
+                      }
+                    }}
                     className="pl-12 h-14 bg-[#0a0e27] border-[#00d9ff]/30 text-white placeholder:text-gray-500 focus:border-[#00d9ff] focus:shadow-[0_0_15px_rgba(0,217,255,0.3)] transition-all"
                   />
                 </div>
